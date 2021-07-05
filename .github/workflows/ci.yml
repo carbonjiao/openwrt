@@ -9,7 +9,7 @@
 name: Build OTA
 
 on:
-  push
+  #push
 
 env:
   FEEDS_CONF: feeds.conf.default
