@@ -12,7 +12,6 @@ validate_section_ttyd()
 	uci_validate_section ttyd ttyd "$1" \
 		'enable:bool:1' \
 		'port:port' \
-		'interface:string' \
 		'credential:string' \
 		'uid:uinteger' \
 		'gid:uinteger' \
