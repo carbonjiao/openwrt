@@ -32,7 +32,7 @@ jobs:
     name: ${{ matrix.target }}
     strategy:
       matrix:
-        target: [z9s, x9s]
+        target: [z9s]
     env:
       CONFIG_FILE: "${{ matrix.target }}.config"
       FALLBACK_DEVICE_NAME: "${{ matrix.target }}"
