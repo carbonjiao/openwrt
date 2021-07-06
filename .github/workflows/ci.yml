@@ -185,3 +185,40 @@ jobs:
           curl -fsSL git.io/file-transfer | sh
           ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
           echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+
+      - name: 获取OpenWRT仓库位置CDN
+        uses: actions/checkout@v2
+        if: steps.organize.outputs.status == 'success' && env.CDN != '' && !cancelled()
+        with:
+          token: ${{ secrets.CDN_TOKEN }}
+          repository: ${{ env.CDN }}
+          fetch-depth: 2
+          path: cdn
+
+      - name: 上传到CDN
+        if: steps.organize.outputs.status == 'success' && env.CDN != '' && !cancelled()
+        run: |
+          git config --global user.name "Actions"
+          git config --global user.email "actions@github.com"
+          mv ${FIRMWARE}/sha256sums ${FIRMWARE}/sha256sums.new
+          sed -i '/ *config.seed$/d' ${FIRMWARE}/sha256sums.new
+          mv ${FIRMWARE}/config.seed ${FIRMWARE}/$CONFIG_FILE
+          
+          for first in true false; do
+            [ -f cdn/.reset ] && git -C cdn reset HEAD^
+            mkdir -p cdn/openwrt/release/${REPO_VERSION}/${TARGET_DIR}
+            cat ${FIRMWARE}/sha256sums.new >> cdn/openwrt/release/${REPO_VERSION}/${TARGET_DIR}/sha256sums
+            tar -cC ${FIRMWARE} . | tar -xC cdn/openwrt/release/${REPO_VERSION}/${TARGET_DIR}
+            rm -f cdn/openwrt/release/${REPO_VERSION}/${TARGET_DIR}/sha256sums.new
+            [ "$FALLBACK_DEVICE_NAME" == "$TARGET_WITH_MODULES" ] && cp -a openwrt/bin/packages cdn/openwrt/release/${REPO_VERSION}/
+            [ "$FALLBACK_DEVICE_NAME" == "$TARGET_WITH_MODULES" ] && cp -a openwrt/tmp/packages cdn/openwrt/release/${REPO_VERSION}/${TARGET_DIR}/
+            git -C cdn add --all
+            git -C cdn commit -m 'release'
+            if git -C cdn push `[ -f cdn/.reset ] && echo -f`; then
+              break
+            elif $first; then
+              git -C cdn reset --hard HEAD^ && git -C cdn pull
+            else
+              exit -1
+            fi
+          done
