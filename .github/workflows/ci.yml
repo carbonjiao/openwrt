@@ -9,7 +9,13 @@
 name: Build OTA
 
 on:
-  push
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'true'
 
 env:
   FEEDS_CONF: feeds.conf.default
