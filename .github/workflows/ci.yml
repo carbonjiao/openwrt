@@ -107,7 +107,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           
       - name: SSH connection to Actions
-        uses: carbonjiao/debugger-action@master
+        uses: P3TERX/ssh2actions@v1.0.0
       
       - name: 写入编译key
         if: env.BUILD_KEY != '' && env.BUILD_KEY_PUB != ''
