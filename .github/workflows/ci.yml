@@ -100,13 +100,6 @@ jobs:
         working-directory: ./openwrt
         run: |
           git clone https://github.com/kenzok78/jeii package/jeii
-        
-      - name: SSH 连接到编译进程Actions
-        uses: P3TERX/ssh2actions@v1.0.0
-        if: github.event.inputs.ssh == 'true' || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       
       - name: 写入编译key
         if: env.BUILD_KEY != '' && env.BUILD_KEY_PUB != ''
@@ -126,7 +119,14 @@ jobs:
           make download -j8
           find dl -size -1024c -exec ls -l {} \;
           find dl -size -1024c -exec rm -f {} \;
-
+          
+      - name: SSH 连接到编译进程Actions
+        uses: P3TERX/ssh2actions@v1.0.0
+        if: github.event.inputs.ssh == 'true' || contains(github.event.action, 'ssh')
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          
       - name: 编译固件
         id: compile
         run: |
