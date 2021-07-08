@@ -99,7 +99,7 @@ jobs:
       - name: 自定义安装源
         working-directory: ./openwrt
         run: |
-          git clone https://github.com/kenzok78/jell.git package/jell
+          git clone https://github.com/kenzok78/jeii.git package/jeii
           git clone https://github.com/kenzok78/openwrt-passwall package/openwrt-passwall
           rm -rf package/jell/trojan-plus
       
