@@ -99,7 +99,9 @@ jobs:
       - name: 自定义安装源
         working-directory: ./openwrt
         run: |
-          git clone https://github.com/kenzok78/jeii package/jeii
+          git clone https://github.com/kenzok78/jell.git package/jell
+          git clone https://github.com/kenzok78/openwrt-passwall package/openwrt-passwall
+          rm -rf package/jell/trojan-plus
       
       - name: 写入编译key
         if: env.BUILD_KEY != '' && env.BUILD_KEY_PUB != ''
@@ -133,7 +135,6 @@ jobs:
         run: |
           cd openwrt
           echo -e "$(nproc) thread compile"
-          rm -rf packages/net/trojan-plus
           make -j$(nproc) || bash -c 'set -o pipefail ; make -j1 V=s 2>&1 | tee /tmp/openwrt-build.log'
           echo "::set-output name=status::success"
           grep '^CONFIG_TARGET.*DEVICE.*=y' .config | sed -r 's/.*DEVICE_(.*)=y/\1/' > DEVICE_NAME
