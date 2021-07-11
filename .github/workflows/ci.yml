@@ -101,8 +101,9 @@ jobs:
         run: |
           git clone https://github.com/kenzok78/jeii.git package/jeii
           git clone https://github.com/kenzok78/openwrt-passwall package/openwrt-passwall
-          rm -rf package/jell/trojan-plus
-      
+          #rm -rf package/jell/trojan-plus
+          #rm -rf package/openwrt-passwall/trojan-plus
+          
       - name: 写入编译key
         if: env.BUILD_KEY != '' && env.BUILD_KEY_PUB != ''
         env:
