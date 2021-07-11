@@ -103,6 +103,7 @@ jobs:
           git clone https://github.com/kenzok78/openwrt-passwall package/openwrt-passwall
           rm -rf package/jell/trojan-plus
           rm -rf package/openwrt-passwall/trojan-plus
+          rm -rf feeds/packages/net/trojan-plus
           
       - name: 写入编译key
         if: env.BUILD_KEY != '' && env.BUILD_KEY_PUB != ''
