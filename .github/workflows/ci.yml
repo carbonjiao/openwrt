@@ -100,7 +100,7 @@ jobs:
         working-directory: ./openwrt
         run: |
           git clone https://github.com/kenzok78/jeii.git package/jeii
-          git clone https://github.com/kenzok78/openwrt-passwall package/openwrt-passwall
+          #git clone https://github.com/kenzok78/openwrt-passwall package/openwrt-passwall
           rm -rf package/jell/trojan-plus
           rm -rf package/openwrt-passwall/trojan-plus
           rm -rf feeds/packages/net/trojan-plus
